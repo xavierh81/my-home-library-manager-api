@@ -7,7 +7,11 @@ const { attributeFields, resolver, typeMapper } = require('graphql-sequelize');
 let userType = new GraphQLObjectType({
     name: 'User',
     description :'User',
-    fields: Object.assign(attributeFields(models.User), {})
+    fields: Object.assign(attributeFields(models.User), {
+        accessToken: {
+            type: GraphQLString
+        }
+    })
 })
 
 // Exports

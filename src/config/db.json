@@ -1,11 +1,21 @@
 {
+  "test": {
+    "username": "mhlm_user_test",
+    "password": "SbHuWoW63ZoZeVE0x2Q5",
+    "database": "mhlm_db_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "timezone": "+00:00",
+    "logging": false
+  },
   "local": {
     "username": "mhlm_user",
     "password": "vs25f6J4vrtb3It6z7NU",
     "database": "mhlm_db",
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "timezone": "+00:00"
+    "timezone": "+00:00",
+    "logging": false
   },
   "development": {
     

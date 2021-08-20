@@ -6,7 +6,7 @@ const {resolver} = require('graphql-sequelize');
 const models = require('@models')
 
 // Load needed GraphQL Types
-const {userType} = require('@graphql/types/usersTypes')
+const {userType} = require('@defs_graphql/types/usersTypes')
 
 // Define core object
 const usersQueries = {}
@@ -20,6 +20,14 @@ usersQueries.users = {
         const users = await models.User.findAll();
 
         return users;
+    }
+}
+
+usersQueries.user = {
+    type: userType,
+    args: {},
+    resolve: async function (root, {}, context, info) {
+        return context.user;
     }
 }
 

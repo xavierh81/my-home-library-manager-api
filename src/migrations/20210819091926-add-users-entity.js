@@ -23,6 +23,13 @@ module.exports = {
             notEmpty: true
         }
       },
+      refreshToken: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
+      },
       firstName: {
         type: Sequelize.STRING,
         allowNull: false,
