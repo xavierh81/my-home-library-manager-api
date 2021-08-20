@@ -1,0 +1,42 @@
+{
+  "name": "my-home-library-manager-api",
+  "version": "1.0.0",
+  "description": "API Repository for personal project MyHomeLibraryManager",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xavierh81/my-home-library-manager-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xavierh81/my-home-library-manager-api/issues"
+  },
+  "homepage": "https://github.com/xavierh81/my-home-library-manager-api#readme",
+  "_moduleAliases": {
+    "@root": ".",
+    "@models": "./src/models",
+    "@config": "./src/config",
+    "@graphql": "./src/graphql",
+    "@helpers": "./src/helpers"
+  },
+  "dependencies": {
+    "apollo-server-express": "^3.1.2",
+    "express": "^4.17.1",
+    "graphql": "^15.5.1",
+    "graphql-relay": "^0.8.0",
+    "graphql-sequelize": "^9.4.3",
+    "module-alias": "^2.2.2",
+    "moment-timezone": "^0.5.33",
+    "pg": "^8.7.1",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.6.5"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.2.0"
+  }
+}

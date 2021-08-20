@@ -1,0 +1,16 @@
+{
+  "local": {
+    "username": "mhlm_user",
+    "password": "vs25f6J4vrtb3It6z7NU",
+    "database": "mhlm_db",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "timezone": "+00:00"
+  },
+  "development": {
+    
+  },
+  "production": {
+    
+  }
+}
