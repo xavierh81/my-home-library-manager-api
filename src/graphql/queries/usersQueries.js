@@ -11,18 +11,7 @@ const {userType} = require('@defs_graphql/types/usersTypes')
 // Define core object
 const usersQueries = {}
 
-
-// TEST: List of all existing users
-usersQueries.users = {
-    type: GraphQLList(userType),
-    args: {},
-    resolve: async function (root, {}, context, info) {
-        const users = await models.User.findAll();
-
-        return users;
-    }
-}
-
+// Retrieve the profile of logged user
 usersQueries.user = {
     type: userType,
     args: {},

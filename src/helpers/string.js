@@ -6,6 +6,11 @@ module.exports.isStringEmpty = (str) => {
     return (!str || /^\s*$/.test(str));
 }
 
+// Check if the field contains not allowed characters 
+module.exports.isValidString = (str) => {
+    return (!str || /^[a-zA-Z \-\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+$/.test(str));
+}
+
 // Check if the mail is valid
 module.exports.isValidEmail = (str) => {
     return validator.isEmail(str);

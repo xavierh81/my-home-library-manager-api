@@ -5,7 +5,6 @@ module.exports = {
       'Users',
       [
         {
-          id: 1,
           mail: "test_user@mail.com",
           password: "e19d5cd5af0378da05f63f891c7467af", // abcd1234
           firstName: "Test",
@@ -15,7 +14,6 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: 2,
           mail: "test_user_2@mail.com",
           password: "35e5ff80657b6744d43021c23043346d", // abcd5678
           firstName: "Test",
