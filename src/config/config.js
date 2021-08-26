@@ -1,6 +1,6 @@
 module.exports = {
     local: {
-        front_url: 'http://localhost:4000',
+        front_url: 'http://localhost:4001',
         graphql_explorer_url: 'https://studio.apollographql.com',
         auth: {
             server_secret_key: process.env.MHLM_SERVER_SECRET_KEY,

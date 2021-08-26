@@ -15,15 +15,26 @@ module.exports.generateAccessToken = (user) => {
 
 // Extract token from header
 module.exports.getAuthTokenFromHeader = (req) => {
-    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-        return req.headers.authorization.split(' ')[1];
+    if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') 
+    { 
+        var token = req.headers.authorization.split(' ')[1];
+        // Try to decode the auth Token and verify his validity
+        try {
+            const decoded = jwt.verify(token, config.auth.server_secret_key);
+
+            // If we arrive here, then the auth token is valid and we should proceed
+            return token
+        }
+        catch {}
     }
 
+    // If we arrive here, the auth token is not supplied or not valid
     return null;
 }
 
 // Retrieve user from token
 module.exports.getUserFromToken = (tokenData) => {
+    console.log("[getUserFromToken] Start")
     return new Promise((resolve, reject) => {
         models.User.findOne({where: {id: tokenData.sub}}).then(user => {
             if (user) {

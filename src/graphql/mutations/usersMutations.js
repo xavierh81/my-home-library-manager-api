@@ -21,11 +21,12 @@ var config    = require('@config/config')[env];
 // Custom errors
 const { 
     InvalidCredentialsError, 
-    MissingRequiredParameter, 
+    MissingRequiredParameterError, 
     InvalidMailFormatError, 
     InvalidCharacterError,
     UserMailAlreadyUsedError 
-} = require('@defs_graphql/errors')
+} = require('@defs_graphql/errors');
+const { UserNotAllowedError } = require('../errors');
 
 // Define core object
 const usersMutations = {}
@@ -47,7 +48,7 @@ usersMutations.login = {
         try {
             // Check if required parameters are all set
             if(isStringEmpty(mail) || isStringEmpty(password)){
-                throw new MissingRequiredParameter();
+                throw new MissingRequiredParameterError();
             }
 
             // Validate the email
@@ -113,7 +114,7 @@ usersMutations.register = {
         try {
             // Check if required parameters are all set
             if(isStringEmpty(firstName) || isStringEmpty(lastName) || isStringEmpty(mail) || isStringEmpty(password)){
-                throw new MissingRequiredParameter();
+                throw new MissingRequiredParameterError();
             }
 
             // Validate firstName / Lastname
@@ -155,10 +156,62 @@ usersMutations.register = {
                 after: (result, args, context) => {
                     result.id = user.id
                     result.accessToken = generateAccessToken(result);
+
+                    if(context.res !== undefined) 
+                    {
+                      console.log("Set refreshToken cookie in response");
+                      context.res.cookie('mhlm_refreshToken',user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
+                    }
+
                     return result;
                 }
             })(root, {}, context, info);
             
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    }
+}
+
+// Endpoint to refresh an access token
+usersMutations.refreshAccessToken = {
+    type: userType,
+    args: {
+        refreshToken: {
+            description: "User's refresh token",
+            type: GraphQLString
+        }
+    },
+    resolve: async function (root, {refreshToken}, context, info) {
+        try {
+            // Validate input
+            if(refreshToken == null) {
+                refreshToken = context.refreshToken
+            }
+    
+            if(isStringEmpty(refreshToken)) {
+                throw new MissingRequiredParameterError()
+            }
+
+            // Try to find a user matching this refreshToken
+            let user = await models.User.findOne({where: {refreshToken: refreshToken}})
+            if(!user){
+                throw new UserNotAllowedError()
+            }
+
+            // Return the user after generate a new access token
+            return await resolver(models.User, {
+                before: (findOptions, args, context) => {
+                    findOptions.where = {id: user.id}
+                    return findOptions
+                },
+                after: (result, args, context) => {
+                    result.accessToken = generateAccessToken(result);
+
+                    return result;
+                }
+            })(root, {}, context, info);
+
         } catch (err) {
             return Promise.reject(err);
         }

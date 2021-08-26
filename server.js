@@ -5,6 +5,7 @@ const { ApolloServer, gql } = require('apollo-server-express');
 const {GraphQLObjectType,GraphQLSchema} = require('graphql')
 var logger = require('morgan');
 const cookieParser = require('cookie-parser');
+var cors = require('cors');
 
 // Register module alias
 require('module-alias/register')
@@ -46,7 +47,7 @@ function createApolloServer() {
     context: ({ req,res,connection }) => {
       return {
         user: req !== undefined ? req.user : null,
-        refreshToken: req !== undefined && req.signedCookies != null ? req.signedCookies.refreshToken : null, 
+        refreshToken: req !== undefined && req.signedCookies != null ? req.signedCookies.mhlm_refreshToken : null, 
         res
       }
     }
@@ -62,6 +63,16 @@ async function startApolloServer() {
 
   // Initialize the app
   const app = express();
+
+  // CORS
+  let corsOptions = {
+    origin: [config.front_url],
+    methods: "GET, POST, PUT, OPTIONS",
+    credentials: true
+  }
+  app.use(cors(corsOptions));
+
+  // Cookies and auth
   app.use(cookieParser(config.auth.server_secret_key));
   app.use(jwt({
     secret: config.auth.server_secret_key,
@@ -129,10 +140,10 @@ async function startApolloServer() {
   }));
 
   // Apply middleware
-  server.applyMiddleware({ app });
+  server.applyMiddleware({ app, cors: corsOptions });
 
-  await new Promise(resolve => app.listen({ port: 4000 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  await new Promise(resolve => app.listen({ port: 4002 }, resolve));
+  console.log(`🚀 Server ready at http://localhost:4002${server.graphqlPath}`);
   return { server, app };
 }
 
