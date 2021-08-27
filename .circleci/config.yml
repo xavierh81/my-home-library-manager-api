@@ -22,9 +22,9 @@ jobs:
 
     steps:
       - checkout
-      - run: node --version
-      - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client-12
+      - run: 
+          name: Install PostgreSQL Client
+          command: sudo apt-get update && apt-get install postgresql-client-12
       - run:
           name: Wait for db to run
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
@@ -41,6 +41,10 @@ jobs:
           name: Check Sequelieze config
           command: cat .sequelizerc
 
+      - run: 
+          name: Install App dependencies
+          command: npm install
+          
       - run: 
           name: Tests API
           command: |
