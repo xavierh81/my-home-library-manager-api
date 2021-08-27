@@ -1,12 +1,10 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 
-orbs:
-  node: circleci/node@4.1
-
 jobs:
   build:
     docker:
+      - image: cimg/node:16.8.0
       # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
       - image: circleci/postgres:10-alpine
         auth:
@@ -18,6 +16,8 @@ jobs:
           POSTGRES_PASSWORD: $MHLM_TEST_DB_PASSWORD
 
     steps:
+      - checkout
+      - run: node --version
       - run: apt-get update
       - run: apt-get install postgresql-client-10
       - run: whoami
@@ -25,13 +25,8 @@ jobs:
           psql \
           -d $POSTGRES_DB \
           -c "CREATE TABLE test (name char(25));"
-
+    
 workflows:
   test:
     jobs:
       - build
-      - node/test:
-          version: '15.1'
-          # This is the node version to use for the `cimg/node` tag
-          # Relevant tags can be found on the CircleCI Developer Hub
-          # https://circleci.com/developer/images/image/cimg/node
