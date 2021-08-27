@@ -1,33 +1,56 @@
 # This config is equivalent to both the '.circleci/extended/orb-free.yml' and the base '.circleci/config.yml'
 version: 2.1
 
-orbs:
-  node: circleci/node@4.1
-
 jobs:
-  build:
+  test:
     docker:
-      # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
-      - image: circleci/postgres:10-alpine
+      - image: cimg/node:16.8.0
         auth:
-          username: mydockerhub-user
+          username: $DOCKERHUB_USER
+          password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
+      # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
+      - image: circleci/postgres:12-alpine
+        auth:
+          username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
-          POSTGRES_USER: circleci-demo-go
+          PGUSER: circleci
+          POSTGRES_USER: circleci
           POSTGRES_DB: circle_test
+          POSTGRES_PASSWORD: password
+          POSTGRES_HOST_AUTH_METHOD: trust
 
     steps:
-      #  Wait for Postgres to be ready before proceeding
+      - checkout
+      - run: 
+          name: Install PostgreSQL Client
+          command: sudo apt-get update && sudo apt-get install postgresql-client-12
       - run:
-          name: Waiting for Postgres to be ready
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+          name: Wait for db to run
+          command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
+      - run: 
+          name: Test to create a table
+          command: |
+            psql \
+            -h 127.0.0.1 \
+            -d circle_test \
+            -U circleci \
+            -c "CREATE TABLE test (name char(25));"
 
+      - run: 
+          name: Check Sequelieze config
+          command: cat .sequelizerc
+
+      - run: 
+          name: Install App dependencies
+          command: npm install
+
+      - run: 
+          name: Tests API
+          command: |
+            npm run test
+  
 workflows:
   test:
     jobs:
-      - build
-      - node/test:
-          version: '15.1'
-          # This is the node version to use for the `cimg/node` tag
-          # Relevant tags can be found on the CircleCI Developer Hub
-          # https://circleci.com/developer/images/image/cimg/node
+      - test
