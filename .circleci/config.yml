@@ -17,30 +17,22 @@ jobs:
           PGUSER: $MHLM_TEST_DB_USERNAME
           POSTGRES_DB: $MHLM_TEST_DB_NAME
           POSTGRES_USER: $MHLM_TEST_DB_USERNAME
+          POSTGRES_PASSWORD: password 
+          POSTGRES_HOST_AUTH_METHOD: trust
 
     steps:
       - checkout
       - run: node --version
       - run: sudo apt-get update
-      - run: echo $MHLM_TEST_DB_NAME
-      - run: echo $MHLM_TEST_DB_USERNAME
-      - run: echo $POSTGRES_DB
-      - run: echo $POSTGRES_USER
       - run: sudo apt-get install postgresql-client-12
       - run:
           name: Wait for db to run
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
-      - run:
-          name: Create a new PG user
-          command: sudo createuser -P -s -e -w $MHLM_TEST_DB_USERNAME
-      - run:
-          name: Create a new PG Database
-          command: sudo createdb $MHLM_TEST_DB_NAME
       - run: |
           psql \
           -h 127.0.0.1 \
           -d $MHLM_TEST_DB_NAME \
-          -U $MHLM_TEST_DB_NAME \
+          -U $MHLM_TEST_DB_USERNAME \
           -c "CREATE TABLE test (name char(25));"
     
 workflows:
