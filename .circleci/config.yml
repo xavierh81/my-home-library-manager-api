@@ -19,6 +19,9 @@ jobs:
       - checkout
       - run: node --version
       - run: sudo apt-get update
+      - run: echo $MHLM_TEST_DB_USERNAME
+      - run: echo $POSTGRES_DB
+      - run: echo $POSTGRES_USER
       - run: sudo apt-get install postgresql-client-12
       - run:
           name: Wait for db to run
