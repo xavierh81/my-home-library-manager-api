@@ -1,7 +1,7 @@
 module.exports = {
   test: {
-    username: process.env.MHLM_TEST_DB_USER,
-    password: process.env.MHLM_TEST_DB_USERNAME,
+    username: process.env.MHLM_TEST_DB_USERNAME,
+    password: process.env.MHLM_TEST_DB_PASSWORD,
     database: process.env.MHLM_TEST_DB_NAME,
     host: process.env.MHLM_TEST_DB_HOST,
     port: process.env.MHLM_TEST_DB_PORT,
@@ -10,8 +10,8 @@ module.exports = {
     logging: false
   },
   local: {
-    username: process.env.MHLM_DB_USER,
-    password: process.env.MHLM_DB_USERNAME,
+    username: process.env.MHLM_DB_USERNAME,
+    password: process.env.MHLM_DB_PASSWORD,
     database: process.env.MHLM_DB_NAME,
     host: process.env.MHLM_DB_HOST,
     port: process.env.MHLM_DB_PORT,
