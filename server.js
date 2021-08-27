@@ -66,7 +66,7 @@ async function startApolloServer() {
 
   // CORS
   let corsOptions = {
-    origin: [config.front_url],
+    origin: [config.front_url, config.graphql_explorer_url],
     methods: "GET, POST, PUT, OPTIONS",
     credentials: true
   }
