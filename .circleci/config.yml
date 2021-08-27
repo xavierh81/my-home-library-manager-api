@@ -36,6 +36,14 @@ jobs:
             -d circle_test \
             -U circleci \
             -c "CREATE TABLE test (name char(25));"
+
+      - run: 
+          name: Test to create a database
+          command: |
+            psql \
+            -h 127.0.0.1 \
+            -U circleci \
+            -c "CREATE DATABASE test_db"
     
 workflows:
   test:
