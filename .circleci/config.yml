@@ -27,6 +27,7 @@ jobs:
           psql \
           -h 127.0.0.1 \
           -d $POSTGRES_DB \
+          -U $POSTGRES_USER \
           -c "CREATE TABLE test (name char(25));"
     
 workflows:
