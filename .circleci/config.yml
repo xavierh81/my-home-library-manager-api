@@ -28,12 +28,13 @@ jobs:
       - run:
           name: Wait for db to run
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
-      - run: |
-          psql \
-          -h 127.0.0.1 \
-          -d $MHLM_TEST_DB_NAME \
-          -U circleci \
-          -c "CREATE TABLE test (name char(25));"
+      - run: 
+          name: Create the database
+          command: |
+            psql \
+            -h 127.0.0.1 \
+            -U circleci \
+            -c "CREATE DATABASE $MHLM_TEST_DB_NAME"
     
 workflows:
   test:
