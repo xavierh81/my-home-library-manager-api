@@ -32,10 +32,10 @@ jobs:
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
       - run:
           name: Create a new PG user
-          command: sudo -u postgres createuser -P -s -e -w $MHLM_TEST_DB_USERNAME
+          command: sudo createuser -P -s -e -w $MHLM_TEST_DB_USERNAME
       - run:
           name: Create a new PG Database
-          command: sudo -u postgres createdb $MHLM_TEST_DB_NAME
+          command: sudo createdb $MHLM_TEST_DB_NAME
       - run: |
           psql \
           -h 127.0.0.1 \
