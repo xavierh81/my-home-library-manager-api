@@ -6,7 +6,7 @@ jobs:
     docker:
       - image: cimg/node:16.8.0
       # CircleCI PostgreSQL images available at: https://hub.docker.com/r/circleci/postgres/
-      - image: circleci/postgres:10-alpine
+      - image: circleci/postgres:12-alpine
         auth:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
@@ -18,8 +18,7 @@ jobs:
       - checkout
       - run: node --version
       - run: sudo apt-get update
-      - run: sudo apt-cache search postgresql-client
-      - run: sudo apt-get install postgresql-client-10
+      - run: sudo apt-get install postgresql-client-12
       - run: whoami
       - run: |
           psql \
