@@ -38,12 +38,14 @@ jobs:
             -c "CREATE TABLE test (name char(25));"
 
       - run: 
-          name: Test to create a database
+          name: Check Sequelieze config
+          command: cat .sequelizerc
+
+      - run: 
+          name: Tests API
           command: |
-            psql \
-            -h 127.0.0.1 \
-            -U circleci \
-            -c "CREATE DATABASE test_db"
+            npm run test
+
     
 workflows:
   test:
