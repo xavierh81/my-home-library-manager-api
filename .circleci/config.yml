@@ -25,6 +25,7 @@ jobs:
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
       - run: |
           psql \
+          -h 127.0.0.1 \
           -d $POSTGRES_DB \
           -c "CREATE TABLE test (name char(25));"
     
