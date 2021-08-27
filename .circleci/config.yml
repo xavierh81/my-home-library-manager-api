@@ -11,6 +11,8 @@ jobs:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
+          PGHOST: localhost
+          PGUSER: $MHLM_TEST_DB_USERNAME
           POSTGRES_DB: $MHLM_TEST_DB_NAME
           POSTGRES_USER: $MHLM_TEST_DB_USERNAME
 
@@ -19,7 +21,9 @@ jobs:
       - run: node --version
       - run: sudo apt-get update
       - run: sudo apt-get install postgresql-client-12
-      - run: whoami
+      - run:
+          name: Wait for db to run
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
       - run: |
           psql \
           -d $POSTGRES_DB \
