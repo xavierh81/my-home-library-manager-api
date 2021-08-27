@@ -14,9 +14,9 @@ jobs:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
-          PGUSER: $MHLM_TEST_DB_USERNAME
-          POSTGRES_DB: $MHLM_TEST_DB_NAME
-          POSTGRES_USER: $MHLM_TEST_DB_USERNAME
+          PGUSER: circleci
+          POSTGRES_USER: circleci
+          POSTGRES_DB: circle_test
           POSTGRES_PASSWORD: password 
           POSTGRES_HOST_AUTH_METHOD: trust
 
@@ -32,7 +32,7 @@ jobs:
           psql \
           -h 127.0.0.1 \
           -d $MHLM_TEST_DB_NAME \
-          -U $MHLM_TEST_DB_USERNAME \
+          -U circleci \
           -c "CREATE TABLE test (name char(25));"
     
 workflows:
