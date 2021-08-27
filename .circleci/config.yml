@@ -14,8 +14,8 @@ jobs:
           username: $DOCKERHUB_USER
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
-          PGUSER: circleci # Must be set to "circleci"
-          POSTGRES_USER: circleci # Must be set to "circleci"
+          PGUSER: $MHLM_TEST_DB_USERNAME # Must be set to "circleci"
+          POSTGRES_USER: $MHLM_TEST_DB_USERNAME # Must be set to "circleci"
           POSTGRES_DB: circle_test # Must be set to "circle_test"
           POSTGRES_PASSWORD: password
           POSTGRES_HOST_AUTH_METHOD: trust
