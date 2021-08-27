@@ -25,6 +25,7 @@ jobs:
 workflows:
   test:
     jobs:
+      - build
       - node/test:
           version: '15.1'
           # This is the node version to use for the `cimg/node` tag
