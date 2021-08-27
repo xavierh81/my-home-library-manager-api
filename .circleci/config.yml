@@ -13,13 +13,12 @@ jobs:
         environment:
           POSTGRES_DB: $MHLM_TEST_DB_NAME
           POSTGRES_USER: $MHLM_TEST_DB_USERNAME
-          POSTGRES_PASSWORD: $MHLM_TEST_DB_PASSWORD
 
     steps:
       - checkout
       - run: node --version
-      - run: apt-get update
-      - run: apt-get install postgresql-client-10
+      - run: sudo apt-get update
+      - run: sudo apt-get install postgresql-client-10
       - run: whoami
       - run: |
           psql \
