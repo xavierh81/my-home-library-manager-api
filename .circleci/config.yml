@@ -18,6 +18,7 @@ jobs:
       - checkout
       - run: node --version
       - run: sudo apt-get update
+      - run: sudo apt-cache search postgresql-client
       - run: sudo apt-get install postgresql-client-10
       - run: whoami
       - run: |
