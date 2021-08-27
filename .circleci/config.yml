@@ -18,8 +18,8 @@ jobs:
           POSTGRES_PASSWORD: $MHLM_TEST_DB_PASSWORD
 
     steps:
-      - run: sudo apt-get update
-      - run: sudo apt-get install postgresql-client-10
+      - run: apt-get update
+      - run: apt-get install postgresql-client-10
       - run: whoami
       - run: |
           psql \
