@@ -6,12 +6,6 @@ module.exports = {
     host: process.env.MHLM_TEST_DB_HOST,
     port: process.env.MHLM_TEST_DB_PORT,
     dialect: "postgres",
-    dialectOptions: {
-      ssl: {
-          require: true,
-          rejectUnauthorized: false
-      }
-    },
     timezone: "+00:00",
     logging: false
   },
