@@ -13,14 +13,18 @@ jobs:
           username: mydockerhub-user
           password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
         environment:
-          POSTGRES_USER: circleci-demo-go
-          POSTGRES_DB: circle_test
+          POSTGRES_DB: $MHLM_TEST_DB_NAME
+          POSTGRES_USER: $MHLM_TEST_DB_USERNAME
+          POSTGRES_PASSWORD: $MHLM_TEST_DB_PASSWORD
 
     steps:
-      #  Wait for Postgres to be ready before proceeding
-      - run:
-          name: Waiting for Postgres to be ready
-          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+      - run: sudo apt-get update
+      - run: sudo apt-get install postgresql-client-10
+      - run: whoami
+      - run: |
+          psql \
+          -d $POSTGRES_DB \
+          -c "CREATE TABLE test (name char(25));"
 
 workflows:
   test:
