@@ -24,7 +24,7 @@ jobs:
       - checkout
       - run: 
           name: Install PostgreSQL Client
-          command: sudo apt-get update && apt-get install postgresql-client-12
+          command: sudo apt-get update && sudo apt-get install postgresql-client-12
       - run:
           name: Wait for db to run
           command: dockerize -wait tcp://127.0.0.1:5432 -timeout 1m
@@ -44,7 +44,7 @@ jobs:
       - run: 
           name: Install App dependencies
           command: npm install
-          
+
       - run: 
           name: Tests API
           command: |
