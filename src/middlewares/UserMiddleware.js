@@ -7,7 +7,6 @@ module.exports = async (req, res, next) => {
     if(req.token !== undefined && req.token != null)
     {   
         req.user = await getUserFromToken(req.token)
-        console.log(req.user);
     }
     next();
 }

@@ -75,8 +75,7 @@ usersMutations.login = {
 
                   if(context.res !== undefined) 
                   {
-                    console.log("Set refreshToken cookie in response");
-                    context.res.cookie('mhlm_refreshToken',user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
+                    context.res.cookie(config.refreshToken_cookie_name, user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
                   }
 
                   return result;
@@ -159,8 +158,7 @@ usersMutations.register = {
 
                     if(context.res !== undefined) 
                     {
-                      console.log("Set refreshToken cookie in response");
-                      context.res.cookie('mhlm_refreshToken',user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
+                      context.res.cookie(config.refreshToken_cookie_name, user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
                     }
 
                     return result;
@@ -215,6 +213,76 @@ usersMutations.refreshAccessToken = {
         } catch (err) {
             return Promise.reject(err);
         }
+    }
+}
+
+// Update the profile of logged user
+usersMutations.updateUser = {
+    type: userType,
+    args: {
+        firstName: {
+            description: "User's firstName",
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        lastName: {
+            description: "User's lastName",
+            type: new GraphQLNonNull(GraphQLString)
+        },
+        mail: {
+            description: "User's email address",
+            type: new GraphQLNonNull(GraphQLString)
+        },
+    },
+    resolve: async function (root, {firstName, lastName, mail}, context, info) {
+        // Check if the user is authenticated
+        if(context.user == null) {
+            throw new UserNotAllowedError()
+        }
+
+        // Check if required parameters are all set
+        if(isStringEmpty(firstName) || isStringEmpty(lastName) || isStringEmpty(mail)){
+            throw new MissingRequiredParameterError();
+        }
+
+        // Validate firstName / Lastname
+        if(!isValidString(firstName) || !isValidString(lastName)) {
+            throw new InvalidCharacterError()
+        }
+
+        // Validate the email
+        const userMail = mail.toLowerCase().trim()
+        if(!isValidEmail(userMail)) {
+            throw new InvalidMailFormatError()
+        }
+
+        // If the mail has changed, make an additional validation
+        if(context.user.mail != userMail)
+        {
+            // Check if another user is already using the same mail
+            // If it's the case, then we fire an error
+            const existingUser = await models.User.findOne({where: { mail: userMail}});
+            if(existingUser != null)
+            {
+                throw new UserMailAlreadyUsedError()
+            }
+        }
+
+        // If we arrive here, we can update the user
+        const newAttributes = {
+            mail: userMail,
+            firstName,
+            lastName
+        }
+
+        await models.User.update(newAttributes, {where: {id: context.user.id}})
+        
+        // Return updated user
+        return await resolver(models.User,{
+            before: (findOptions, args, context) => {
+              findOptions.where = {id: context.user.id}
+              return findOptions
+            }
+        })(root, {}, context, info);
     }
 }
 

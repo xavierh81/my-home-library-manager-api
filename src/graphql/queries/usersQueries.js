@@ -21,6 +21,7 @@ usersQueries.user = {
     type: userType,
     args: {},
     resolve: async function (root, {}, context, info) {
+
         if(context.user == null) {
             throw new UserNotAllowedError()
         }

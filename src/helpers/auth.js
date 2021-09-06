@@ -34,7 +34,6 @@ module.exports.getAuthTokenFromHeader = (req) => {
 
 // Retrieve user from token
 module.exports.getUserFromToken = (tokenData) => {
-    console.log("[getUserFromToken] Start")
     return new Promise((resolve, reject) => {
         models.User.findOne({where: {id: tokenData.sub}}).then(user => {
             if (user) {
