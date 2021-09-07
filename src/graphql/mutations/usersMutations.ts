@@ -5,7 +5,7 @@ const crypto = require('crypto')
 const { v4: uuidv4 } = require('uuid');
 
 // Models
-const models = require('@models')
+const { User } = require('@models')
 
 // GraphQL Types
 const {userType} = require('@defs_graphql/types/usersTypes')
@@ -24,12 +24,12 @@ const {
     MissingRequiredParameterError, 
     InvalidMailFormatError, 
     InvalidCharacterError,
-    UserMailAlreadyUsedError 
+    UserMailAlreadyUsedError,
+    UserNotAllowedError
 } = require('@defs_graphql/errors');
-const { UserNotAllowedError } = require('../errors');
 
 // Define core object
-const usersMutations = {}
+const usersMutations : any = {}
 
 // Login with user credentials
 usersMutations.login = {
@@ -44,7 +44,7 @@ usersMutations.login = {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: async function (root, {mail, password}, context, info) {
+    resolve: async function (root: any, {mail, password}: any, context: any, info: any) {
         try {
             // Check if required parameters are all set
             if(isStringEmpty(mail) || isStringEmpty(password)){
@@ -58,19 +58,19 @@ usersMutations.login = {
 
             // Try to retrieve the user with these credentials
             let hashed_password = crypto.createHash('md5').update(password).digest("hex");
-            let user = await models.User.findOne({where: {mail:mail.toLowerCase(),password: hashed_password}})
+            let user = await User.findOne({where: {mail:mail.toLowerCase(),password: hashed_password}})
 
             if(!user) {
                 throw new InvalidCredentialsError()
             }   
 
             // Return the user after generate a new access token
-            return await resolver(models.User, {
-                before: (findOptions, args, context) => {
+            return await resolver(User, {
+                before: (findOptions: any, args: any, context: any) => {
                   findOptions.where = {id: user.id}
                   return findOptions
                 },
-                after: (result, args, context) => {
+                after: (result: any, args: any, context: any) => {
                   result.accessToken = generateAccessToken(result);
 
                   if(context.res !== undefined) 
@@ -109,7 +109,7 @@ usersMutations.register = {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: async function (root, {firstName, lastName, mail, password}, context, info) {
+    resolve: async function (root: any, {firstName, lastName, mail, password}: any, context: any, info: any) {
         try {
             // Check if required parameters are all set
             if(isStringEmpty(firstName) || isStringEmpty(lastName) || isStringEmpty(mail) || isStringEmpty(password)){
@@ -128,7 +128,7 @@ usersMutations.register = {
             }
 
             // Check if user already exists
-            let user = await models.User.findOne({where: {mail: userMail}})
+            let user = await User.findOne({where: {mail: userMail}})
             if(user != null)
             {
                 throw new UserMailAlreadyUsedError()
@@ -138,7 +138,7 @@ usersMutations.register = {
             let hashed_password = crypto.createHash('md5').update(password).digest("hex");
             
             // Create the user
-            user = await models.User.create({
+            user = await User.create({
                 firstName,
                 lastName,
                 mail: userMail,
@@ -147,12 +147,12 @@ usersMutations.register = {
             })
             
             // Return the user after generate a new access token
-            return await resolver(models.User, {
-                before: (findOptions, args, context) => {
+            return await resolver(User, {
+                before: (findOptions: any, args: any, context: any) => {
                     findOptions.where = {id: user.id}
                     return findOptions
                 },
-                after: (result, args, context) => {
+                after: (result: any, args: any, context: any) => {
                     result.id = user.id
                     result.accessToken = generateAccessToken(result);
 
@@ -180,7 +180,7 @@ usersMutations.refreshAccessToken = {
             type: GraphQLString
         }
     },
-    resolve: async function (root, {refreshToken}, context, info) {
+    resolve: async function (root: any, {refreshToken}: any, context: any, info: any) {
         try {
             // Validate input
             if(refreshToken == null) {
@@ -192,18 +192,18 @@ usersMutations.refreshAccessToken = {
             }
 
             // Try to find a user matching this refreshToken
-            let user = await models.User.findOne({where: {refreshToken: refreshToken}})
+            let user = await User.findOne({where: {refreshToken: refreshToken}})
             if(!user){
                 throw new UserNotAllowedError()
             }
 
             // Return the user after generate a new access token
-            return await resolver(models.User, {
-                before: (findOptions, args, context) => {
+            return await resolver(User, {
+                before: (findOptions: any, args: any, context: any) => {
                     findOptions.where = {id: user.id}
                     return findOptions
                 },
-                after: (result, args, context) => {
+                after: (result: any, args: any, context: any) => {
                     result.accessToken = generateAccessToken(result);
 
                     return result;
@@ -233,7 +233,7 @@ usersMutations.updateUser = {
             type: new GraphQLNonNull(GraphQLString)
         },
     },
-    resolve: async function (root, {firstName, lastName, mail}, context, info) {
+    resolve: async function (root: any, {firstName, lastName, mail}: any, context: any, info: any) {
         // Check if the user is authenticated
         if(context.user == null) {
             throw new UserNotAllowedError()
@@ -260,7 +260,7 @@ usersMutations.updateUser = {
         {
             // Check if another user is already using the same mail
             // If it's the case, then we fire an error
-            const existingUser = await models.User.findOne({where: { mail: userMail}});
+            const existingUser = await User.findOne({where: { mail: userMail}});
             if(existingUser != null)
             {
                 throw new UserMailAlreadyUsedError()
@@ -274,11 +274,11 @@ usersMutations.updateUser = {
             lastName
         }
 
-        await models.User.update(newAttributes, {where: {id: context.user.id}})
+        await User.update(newAttributes, {where: {id: context.user.id}})
         
         // Return updated user
-        return await resolver(models.User,{
-            before: (findOptions, args, context) => {
+        return await resolver(User,{
+            before: (findOptions: any, args: any, context: any) => {
               findOptions.where = {id: context.user.id}
               return findOptions
             }
@@ -287,4 +287,4 @@ usersMutations.updateUser = {
 }
 
 // Export module
-module.exports.usersMutations = usersMutations;
+export default usersMutations;

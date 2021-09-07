@@ -4,6 +4,7 @@
   "description": "API Repository for personal project MyHomeLibraryManager",
   "main": "server.js",
   "scripts": {
+    "start:dev": "nodemon",
     "test": "cross-env NODE_ENV=test jest",
     "pretest": "cross-env NODE_ENV=test npm run db:reset",
     "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all --seeders-path ./src/seeders/test",
@@ -21,7 +22,7 @@
   },
   "homepage": "https://github.com/xavierh81/my-home-library-manager-api#readme",
   "_moduleAliases": {
-    "@root": ".",
+    "@root": "./src",
     "@models": "./src/models",
     "@config": "./src/config",
     "@helpers": "./src/helpers",
@@ -35,6 +36,7 @@
       "./node_modules/"
     ],
     "moduleNameMapper": {
+      "@root(.*)$": "<rootDir>/src$1",
       "@models(.*)$": "<rootDir>/src/models$1",
       "@config(.*)$": "<rootDir>/src/config$1",
       "@helpers(.*)$": "<rootDir>/src/helpers$1",
@@ -43,6 +45,8 @@
     }
   },
   "dependencies": {
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/sequelize": "^4.28.10",
     "apollo-server-express": "^3.1.2",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -64,9 +68,15 @@
     "validator": "^13.6.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.15.4",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
     "cross-env": "^7.0.3",
     "jest": "^27.0.6",
+    "nodemon": "^2.0.12",
     "sequelize-cli": "^6.2.0",
-    "supertest": "^6.1.6"
+    "supertest": "^6.1.6",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.2"
   }
 }

@@ -1,6 +1,6 @@
 // Load dependencies
 const express = require('express');
-const jwt = require("express-jwt");
+const expressJwt = require("express-jwt");
 const { ApolloServer, gql } = require('apollo-server-express');
 const {GraphQLObjectType,GraphQLSchema} = require('graphql')
 var logger = require('morgan');
@@ -11,11 +11,11 @@ var cors = require('cors');
 require('module-alias/register')
 
 // Load all GraphQL schema part
-const {queries} = require('@defs_graphql/queries')
-const {mutations} = require('@defs_graphql/mutations')
+const queries = require('@defs_graphql/queries').default
+const mutations = require('@defs_graphql/mutations').default
 
 // Load models
-var models = require('@models')
+const db = require('@models/_instance').default
 
 // Load helpers
 const {formatBytes} = require('@helpers/string')
@@ -44,7 +44,7 @@ function createApolloServer() {
 
   const server = new ApolloServer({
     schema,
-    context: ({ req,res,connection }) => {
+    context: ({ req, res }: any) => {
       return {
         user: req !== undefined ? req.user : null,
         refreshToken: req !== undefined && req.signedCookies != null ? req.signedCookies.mhlm_refreshToken : null, 
@@ -74,7 +74,7 @@ async function startApolloServer() {
 
   // Cookies and auth
   app.use(cookieParser(config.auth.server_secret_key));
-  app.use(jwt({
+  app.use(expressJwt({
     secret: config.auth.server_secret_key,
     algorithms: ["HS256"],
     credentialsRequired: false,
@@ -86,7 +86,7 @@ async function startApolloServer() {
   app.use(userMiddleware)
 
   // Custom error handling
-  app.use(function (err, req, res, next) {
+  app.use(function (err: { name: string; }, req: any, res: any, next: any) {
     if (err.name === 'UnauthorizedError') {
       res.sendStatus(401);
     }
@@ -97,7 +97,7 @@ async function startApolloServer() {
   //
   app.use(express.json())
   app.use(express.urlencoded({extended: true}));
-  app.use(logger(function (tokens, req, res) {
+  app.use(logger(function (tokens: any, req: any, res: any) {
     // Extract important values
     const url = tokens.url(req, res)
     const method = tokens.method(req, res);
@@ -151,13 +151,13 @@ async function startApolloServer() {
 if(process.env.NODE_ENV == "test")
 {
   module.exports.server = createApolloServer();
-  module.exports.models = models;
+  module.exports.db = db;
 }
 // Else we run start the apollo server and listen for requests
 else 
 {
-  // Sync the Sequelize Model and then start appolo
-  models.sequelize.sync({force: false}).then(function () {
+  // Sync the Sequelize Model and then start apollo
+  db.sequelize.sync({force: false}).then(function () {
     // Start the apollo server
     startApolloServer();
   })

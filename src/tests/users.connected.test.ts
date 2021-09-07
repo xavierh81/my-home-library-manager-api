@@ -1,8 +1,5 @@
 // Imports
-const gql = require("graphql-tag")
-
-// Helpers
-const {generateAccessToken} = require('@helpers/auth')
+import gql from "graphql-tag"
 
 // Load constants
 const { 
@@ -13,13 +10,17 @@ const { 
     USER_NOT_ALLOWED_ERROR_CODE
 } = require('@defs_graphql/errors/codes')
 
+// Models
+const models = require('@models')
+const { User } = models
+
 // Load server
-const {server, models} = require('../server.js')
+const {server, db} = require('@root/server.ts')
 
 // Helper method to add a user context to server calls
 const addUserContext = async () => {
     server.context = {
-        user: await models.User.findOne({where: {id: 1}})
+        user: await User.findOne({where: {id: 1}})
     }
 }
 
@@ -194,5 +195,5 @@ describe('Update user API', () => {
 // At the end, close DB Connection
 afterAll(() => {
     // Closing the DB connection allows Jest to exit successfully.
-    models.sequelize.close();
+    db.sequelize.close();
 });

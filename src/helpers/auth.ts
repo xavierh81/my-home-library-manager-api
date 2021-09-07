@@ -2,19 +2,19 @@
 const jwt = require("jsonwebtoken");
 
 // Models
-const models = require('@models')
+const { User } = require('@models')
 
 // Load configuration
 var env       = process.env.SERVER_ENV || "local";
 var config    = require('@config/config')[env];
 
 // Generate an access token for a user
-module.exports.generateAccessToken = (user) => {
+module.exports.generateAccessToken = (user: typeof User) => {
     return jwt.sign({ sub: user.id }, config.auth.server_secret_key, {expiresIn: config.auth.access_token_expiration})
 }
 
 // Extract token from header
-module.exports.getAuthTokenFromHeader = (req) => {
+module.exports.getAuthTokenFromHeader = (req: any) => {
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') 
     { 
         var token = req.headers.authorization.split(' ')[1];
@@ -33,9 +33,9 @@ module.exports.getAuthTokenFromHeader = (req) => {
 }
 
 // Retrieve user from token
-module.exports.getUserFromToken = (tokenData) => {
+module.exports.getUserFromToken = (tokenData: any) => {
     return new Promise((resolve, reject) => {
-        models.User.findOne({where: {id: tokenData.sub}}).then(user => {
+        User.findOne({where: {id: tokenData.sub}}).then((user : typeof User) => {
             if (user) {
                 resolve(user)
             } else {

@@ -1,5 +1,5 @@
-// Load all GraphQL queries 
-const { usersQueries } = require('@defs_graphql/queries/usersQueries')
+// Load all GraphQL queries
+import usersQueries from './usersQueries'
 
 // Format main queries object with merging all queries defined in files from graphql/queries folder
 const queries = {
@@ -7,4 +7,4 @@ const queries = {
 }
 
 // Export module
-module.exports.queries = queries;
+export default queries

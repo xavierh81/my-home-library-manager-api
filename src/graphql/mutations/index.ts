@@ -1,10 +1,11 @@
 // Load all GraphQL mutations 
-const { usersMutations } = require('@defs_graphql/mutations/usersMutations')
+import usersMutations from './usersMutations'
+//const { mediasMutations } = require('@defs_graphql/mutations/mediasMutations')
 
 // Format main mutations object with merging all mutations defined in files from graphql/mutations folder
 const mutations = {
-    ...usersMutations
+    ...usersMutations,
 }
 
 // Export module
-module.exports.mutations = mutations;
+export default mutations

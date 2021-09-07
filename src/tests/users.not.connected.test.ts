@@ -1,5 +1,5 @@
 // Imports
-const gql = require("graphql-tag")
+import gql from 'graphql-tag';
 
 // Load constants
 const { 
@@ -11,7 +11,7 @@ const { 
 } = require('@defs_graphql/errors/codes')
 
 // Load server
-const {server, models} = require('../server.js')
+const {server, db} = require('@root/server.ts')
 
 // All tests regarding Login mutation
 describe('Login API', () => {
@@ -194,5 +194,5 @@ describe('Register API', () => {
 // At the end, close DB Connection
 afterAll(() => {
     // Closing the DB connection allows Jest to exit successfully.
-    models.sequelize.close();
+    db.sequelize.close();
 });
