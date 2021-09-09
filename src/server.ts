@@ -47,7 +47,6 @@ function createApolloServer() {
   const server = new ApolloServer({
     schema,
     context: ({ req, res }: any) => {
-      console.log("Server - Context - Define")
       return {
         user: req !== undefined ? req.user : null,
         refreshToken: req !== undefined && req.signedCookies != null ? req.signedCookies.mhlm_refreshToken : null, 

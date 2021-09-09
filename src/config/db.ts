@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const config: any = {
+const dbConfig = {
   test: {
     username: process.env.MHLM_TEST_DB_USERNAME,
     password: process.env.MHLM_TEST_DB_PASSWORD,
@@ -28,4 +28,4 @@ const config: any = {
   }
 }
 
-export default config
+module.exports = dbConfig

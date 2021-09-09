@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import config from '@config/config';
-import dbConfig from '@config/db'
+const dbConfig = require('@config/db')
 
 export const loadConfig = () : any => {
     const env = process.env.SERVER_ENV || "local";
@@ -9,6 +10,6 @@ export const loadConfig = () : any => {
 }
 
 export const loadDbConfig = () : any => {
-    const env = process.env.SERVER_ENV || "local";
+    const env = process.env.NODE_ENV || "local";
     return dbConfig[env]
 }
