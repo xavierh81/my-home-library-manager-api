@@ -1,8 +1,7 @@
 // Declare models
 import User from './User'
 
-const models = {
+// Exports
+export {
   User
 }
-
-module.exports = models;

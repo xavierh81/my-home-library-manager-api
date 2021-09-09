@@ -2,16 +2,16 @@
 import gql from 'graphql-tag';
 
 // Load constants
-const { 
+import {
     GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE, 
     GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE,
     GLOBAL_NOT_ALLOWED_CHARACTER_ERROR_CODE,
     USER_INVALID_CREDENTIALS_ERROR_CODE,
     USER_MAIL_ALREADY_USED_ERROR_CODE
-} = require('@defs_graphql/errors/codes')
+} from '@defs_graphql/errors/codes'
 
 // Load server
-const {server, db} = require('@root/server.ts')
+import mhlmServer from '@root/server'
 
 // All tests regarding Login mutation
 describe('Login API', () => {
@@ -28,7 +28,7 @@ describe('Login API', () => {
     `
 
     test('Check missing parameter', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: loginMutation
         });
 
@@ -36,7 +36,7 @@ describe('Login API', () => {
     })
 
     test('Check empty parameter', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: loginMutation,
             variables: {
                 mail: ' ',
@@ -49,7 +49,7 @@ describe('Login API', () => {
     })
 
     test('Check not-well formatted mail', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: loginMutation,
             variables: {
                 mail: 'xxxxxx@xxx@fr',
@@ -62,7 +62,7 @@ describe('Login API', () => {
     })
 
     test('Check wrong credentials', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: loginMutation,
             variables: {
                 mail: 'test_user@mail.com',
@@ -75,7 +75,7 @@ describe('Login API', () => {
     })
 
     test('Login success', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: loginMutation,
             variables: {
                 mail: 'test_user@mail.com',
@@ -105,7 +105,7 @@ describe('Register API', () => {
     `
 
     test('Check missing parameter', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: registerMutation
         });
 
@@ -113,7 +113,7 @@ describe('Register API', () => {
     })
 
     test('Check empty parameter', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: registerMutation,
             variables: {
                 firstName: 'User',
@@ -128,7 +128,7 @@ describe('Register API', () => {
     })
 
     test('Check not allowed characters', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: registerMutation,
             variables: {
                 firstName: 'User',
@@ -143,7 +143,7 @@ describe('Register API', () => {
     })
 
     test('Check not-well formatted mail', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: registerMutation,
             variables: {
                 firstName: 'User',
@@ -158,7 +158,7 @@ describe('Register API', () => {
     })
 
     test('Check mail already used', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: registerMutation,
             variables: {
                 firstName: 'User',
@@ -173,7 +173,7 @@ describe('Register API', () => {
     })
 
     test('Register success', async () => {
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: registerMutation,
             variables: {
                 firstName: 'New user',
@@ -194,5 +194,5 @@ describe('Register API', () => {
 // At the end, close DB Connection
 afterAll(() => {
     // Closing the DB connection allows Jest to exit successfully.
-    db.sequelize.close();
+    mhlmServer.db.sequelize.close();
 });

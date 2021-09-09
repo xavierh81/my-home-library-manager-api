@@ -9,7 +9,18 @@
     "noImplicitAny": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "types": ["node"]
+    "types": ["node", "jest"],
+    "baseUrl": ".",
+    "paths": {
+      "@root/*": ["src/*"],
+      "@interfaces/*": ["src/ts/interfaces/*"],
+      "@models/*": ["src/models/*"],
+      "@models": ["src/models/index.ts"],
+      "@config/*": ["src/config/*"],
+      "@helpers/*": ["src/helpers/*"],
+      "@defs_graphql/*": ["src/graphql/*"],
+      "@middlewares/*": ["src/middlewares/*"],
+    }
   },
   "exclude": [
     "node_modules",

@@ -1,4 +1,5 @@
-module.exports = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+const config: any = {
     local: {
         front_url: 'http://localhost:4001',
         graphql_explorer_url: 'https://studio.apollographql.com',
@@ -10,3 +11,5 @@ module.exports = {
         }
     }
 }
+
+export default config

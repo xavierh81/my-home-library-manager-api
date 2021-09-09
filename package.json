@@ -8,7 +8,8 @@
     "test": "cross-env NODE_ENV=test jest",
     "pretest": "cross-env NODE_ENV=test npm run db:reset",
     "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all --seeders-path ./src/seeders/test",
-    "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create"
+    "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
+    "lint": "eslint src/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,8 @@
     "@config": "./src/config",
     "@helpers": "./src/helpers",
     "@defs_graphql": "./src/graphql",
-    "@middlewares": "./src/middlewares"
+    "@middlewares": "./src/middlewares",
+    "@types": "./src/ts/types"
   },
   "jest": {
     "rootDir": ".",
@@ -41,7 +43,8 @@
       "@config(.*)$": "<rootDir>/src/config$1",
       "@helpers(.*)$": "<rootDir>/src/helpers$1",
       "@defs_graphql(.*)$": "<rootDir>/src/graphql$1",
-      "@middlewares(.*)$": "<rootDir>/src/middlewares$1"
+      "@middlewares(.*)$": "<rootDir>/src/middlewares$1",
+      "@types(.*)$": "<rootDir>/src/ts/types$1"
     }
   },
   "dependencies": {
@@ -69,9 +72,17 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.15.4",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express-jwt": "^6.0.2",
     "@types/jest": "^27.0.1",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/morgan": "^1.9.3",
     "@types/node": "^16.7.13",
+    "@types/uuid": "^8.3.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
     "cross-env": "^7.0.3",
+    "eslint": "^7.32.0",
     "jest": "^27.0.6",
     "nodemon": "^2.0.12",
     "sequelize-cli": "^6.2.0",

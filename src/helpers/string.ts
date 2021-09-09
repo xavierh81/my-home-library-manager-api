@@ -2,22 +2,22 @@
 import validator from 'validator';
 
 // Check if a string parameter is empty 
-module.exports.isStringEmpty = (str: string) => {
+export const isStringEmpty = (str: string) : boolean => {
     return (!str || /^\s*$/.test(str));
 }
 
 // Check if the field contains not allowed characters 
-module.exports.isValidString = (str: string) => {
+export const isValidString = (str: string) : boolean => {
     return (!str || /^[a-zA-Z \-\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u024F]+$/.test(str));
 }
 
 // Check if the mail is valid
-module.exports.isValidEmail = (str: string) => {
+export const isValidEmail = (str: string) : boolean => {
     return validator.isEmail(str);
 }
 
 // Format bytes into a printable string
-module.exports.formatBytes = (bytes: number, decimals = 2) => {
+export const formatBytes = (bytes: number, decimals = 2) : string => {
     if (bytes === 0) return '0B';
 
     const k = 1024;

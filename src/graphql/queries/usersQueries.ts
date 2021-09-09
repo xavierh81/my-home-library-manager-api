@@ -1,14 +1,14 @@
 // Imports
-const {GraphQLList} = require('graphql')
+import {GraphQLList} from 'graphql'
 const {resolver} = require('graphql-sequelize');
 
 // Load needed GraphQL Types
-const {userType} = require('@defs_graphql/types/usersTypes')
+import { userType } from '@defs_graphql/types/usersTypes'
 
 // Custom errors
-const { 
+import { 
     UserNotAllowedError 
-} = require('@defs_graphql/errors')
+} from '@defs_graphql/errors'
 
 // Define core object
 const usersQueries : any = {}

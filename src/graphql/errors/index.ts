@@ -7,9 +7,12 @@ import UserMailAlreadyUsedError from './UserMailAlreadyUsedError'
 import UserNotAllowedError from './UserNotAllowedError'
 
 // Export modules
-module.exports.InvalidCredentialsError = InvalidCredentialsError
-module.exports.MissingRequiredParameterError = MissingRequiredParameterError
-module.exports.InvalidMailFormatError = InvalidMailFormatError
-module.exports.InvalidCharacterError = InvalidCharacterError
-module.exports.UserMailAlreadyUsedError = UserMailAlreadyUsedError
-module.exports.UserNotAllowedError = UserNotAllowedError
+
+export {
+    InvalidCredentialsError,
+    MissingRequiredParameterError,
+    InvalidMailFormatError,
+    InvalidCharacterError,
+    UserMailAlreadyUsedError,
+    UserNotAllowedError
+}

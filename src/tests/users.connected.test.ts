@@ -2,31 +2,30 @@
 import gql from "graphql-tag"
 
 // Load constants
-const { 
+import {
     GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE, 
     GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE,
     GLOBAL_NOT_ALLOWED_CHARACTER_ERROR_CODE,
     USER_MAIL_ALREADY_USED_ERROR_CODE,
     USER_NOT_ALLOWED_ERROR_CODE
-} = require('@defs_graphql/errors/codes')
+} from '@defs_graphql/errors/codes'
 
 // Models
-const models = require('@models')
-const { User } = models
+import {User} from '@models'
 
 // Load server
-const {server, db} = require('@root/server.ts')
+import mhlmServer from '@root/server'
 
 // Helper method to add a user context to server calls
 const addUserContext = async () => {
-    server.context = {
+    mhlmServer.server.context = {
         user: await User.findOne({where: {id: 1}})
     }
 }
 
 // Helper method to remove user context from server calls
 const removeUserContext = async () => {
-    server.context = {}
+    mhlmServer.server.context = {}
 }
 
 //
@@ -47,7 +46,7 @@ describe('Retrieve user API', () => {
     test('Missing authentication', async () => {
         await removeUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: retrieveUserQuery,
         });
 
@@ -58,7 +57,7 @@ describe('Retrieve user API', () => {
     test('User retrieved', async () => {
         await addUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: retrieveUserQuery
         });
 
@@ -85,7 +84,7 @@ describe('Update user API', () => {
     test('Check missing parameter', async () => {
         await removeUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: updateUserMutation,
         });
 
@@ -95,7 +94,7 @@ describe('Update user API', () => {
     test('Check missing auth', async () => {
         await removeUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: updateUserMutation,
             variables: {
                 firstName: 'User',
@@ -111,7 +110,7 @@ describe('Update user API', () => {
     test('Check empty parameter', async () => {
         await addUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: updateUserMutation,
             variables: {
                 firstName: 'User',
@@ -127,7 +126,7 @@ describe('Update user API', () => {
     test('Check not allowed characters', async () => {
         await addUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: updateUserMutation,
             variables: {
                 firstName: 'User',
@@ -143,7 +142,7 @@ describe('Update user API', () => {
     test('Check not-well formatted mail', async () => {
         await addUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: updateUserMutation,
             variables: {
                 firstName: 'User',
@@ -159,7 +158,7 @@ describe('Update user API', () => {
     test('Check mail already used', async () => {
         await addUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: updateUserMutation,
             variables: {
                 firstName: 'User',
@@ -175,7 +174,7 @@ describe('Update user API', () => {
     test('User updated', async () => {
         await addUserContext();
 
-        const result = await server.executeOperation({
+        const result = await mhlmServer.server.executeOperation({
             query: updateUserMutation,
             variables: {
                 firstName: 'User',
@@ -195,5 +194,5 @@ describe('Update user API', () => {
 // At the end, close DB Connection
 afterAll(() => {
     // Closing the DB connection allows Jest to exit successfully.
-    db.sequelize.close();
+    mhlmServer.db.sequelize.close();
 });

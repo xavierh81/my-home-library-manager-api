@@ -1,5 +1,6 @@
 // Imports
 import {GraphQLObjectType,GraphQLString} from 'graphql'
+
 const models = require('@models')
 const { attributeFields, resolver, typeMapper } = require('graphql-sequelize');
 
@@ -15,4 +16,6 @@ let userType = new GraphQLObjectType({
 })
 
 // Exports
-module.exports.userType = userType
+export {
+    userType
+}

@@ -1,26 +1,31 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // Imports
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken"
+import { Request } from "express"
 
 // Models
-const { User } = require('@models')
+import { User } from '@models'
 
 // Load configuration
-var env       = process.env.SERVER_ENV || "local";
-var config    = require('@config/config')[env];
+import {loadConfig} from '@helpers/global'
+
+const config = loadConfig()
 
 // Generate an access token for a user
-module.exports.generateAccessToken = (user: typeof User) => {
+export const generateAccessToken = (user: User) : string => {
+    
     return jwt.sign({ sub: user.id }, config.auth.server_secret_key, {expiresIn: config.auth.access_token_expiration})
 }
 
 // Extract token from header
-module.exports.getAuthTokenFromHeader = (req: any) => {
+export const getAuthTokenFromHeader = (req: Request) : string | null => {
     if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') 
     { 
-        var token = req.headers.authorization.split(' ')[1];
+        const token = req.headers.authorization.split(' ')[1];
         // Try to decode the auth Token and verify his validity
         try {
-            const decoded = jwt.verify(token, config.auth.server_secret_key);
+            jwt.verify(token, config.auth.server_secret_key);
 
             // If we arrive here, then the auth token is valid and we should proceed
             return token
@@ -33,9 +38,9 @@ module.exports.getAuthTokenFromHeader = (req: any) => {
 }
 
 // Retrieve user from token
-module.exports.getUserFromToken = (tokenData: any) => {
-    return new Promise((resolve, reject) => {
-        User.findOne({where: {id: tokenData.sub}}).then((user : typeof User) => {
+export const getUserFromToken = (tokenData: any) : Promise<User | null> => {
+    return new Promise((resolve) => {
+        User.findOne({where: {id: tokenData.sub}}).then((user : User | null) => {
             if (user) {
                 resolve(user)
             } else {

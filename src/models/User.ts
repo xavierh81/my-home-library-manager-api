@@ -13,7 +13,7 @@ interface UserAttributes {
 }
   
 // Define optional attributes for User
-interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
+type UserCreationAttributes = Optional<UserAttributes, "id">
   
 // Create the class with all these attributes
 class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {

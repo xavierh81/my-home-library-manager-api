@@ -1,16 +1,12 @@
-/* eslint-disable import/no-dynamic-require */
-const Sequelize = require('sequelize');
+// Imports
+import { Sequelize } from 'sequelize'
 
-const currentEnv = process.env.NODE_ENV || 'local';
-const dbConfig = require('@config/db.js')[currentEnv];
+// Configuration
+import {loadDbConfig} from '@helpers/global'
+const config = loadDbConfig()
 
 // Init Sequelize instance
-let sequelize: any;
-if (dbConfig.use_env_variable) {
-  sequelize = new Sequelize(process.env[dbConfig.use_env_variable], dbConfig);
-} else {
-  sequelize = new Sequelize(dbConfig.database, dbConfig.username, dbConfig.password, dbConfig);
-}
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
 
 const db = {
     sequelize,

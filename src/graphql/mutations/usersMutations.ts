@@ -1,32 +1,32 @@
 // Imports
-const {GraphQLNonNull, GraphQLString} = require('graphql')
+import {GraphQLNonNull, GraphQLString} from 'graphql'
 const {resolver} = require('graphql-sequelize');
-const crypto = require('crypto')
-const { v4: uuidv4 } = require('uuid');
+import crypto from 'crypto'
+import { v4 as uuidv4 } from 'uuid';
 
 // Models
-const { User } = require('@models')
+import { User } from '@models'
 
 // GraphQL Types
-const {userType} = require('@defs_graphql/types/usersTypes')
+import {userType} from '@defs_graphql/types/usersTypes'
 
 // Helpers 
-const {isStringEmpty, isValidEmail, isValidString} = require('@helpers/string')
-const {generateAccessToken} = require('@helpers/auth')
+import {isStringEmpty, isValidEmail, isValidString} from '@helpers/string'
+import {generateAccessToken} from '@helpers/auth'
 
 // Configuration
 var env       = process.env.SERVER_ENV || "local";
 var config    = require('@config/config')[env];
 
 // Custom errors
-const { 
+import { 
     InvalidCredentialsError, 
     MissingRequiredParameterError, 
     InvalidMailFormatError, 
     InvalidCharacterError,
     UserMailAlreadyUsedError,
     UserNotAllowedError
-} = require('@defs_graphql/errors');
+} from '@defs_graphql/errors'
 
 // Define core object
 const usersMutations : any = {}
@@ -58,9 +58,9 @@ usersMutations.login = {
 
             // Try to retrieve the user with these credentials
             let hashed_password = crypto.createHash('md5').update(password).digest("hex");
-            let user = await User.findOne({where: {mail:mail.toLowerCase(),password: hashed_password}})
+            const user = await User.findOne({where: {mail:mail.toLowerCase(),password: hashed_password}})
 
-            if(!user) {
+            if(user == null) {
                 throw new InvalidCredentialsError()
             }   
 
@@ -128,8 +128,8 @@ usersMutations.register = {
             }
 
             // Check if user already exists
-            let user = await User.findOne({where: {mail: userMail}})
-            if(user != null)
+            let existingUser = await User.findOne({where: {mail: userMail}})
+            if(existingUser != null)
             {
                 throw new UserMailAlreadyUsedError()
             }
@@ -138,7 +138,7 @@ usersMutations.register = {
             let hashed_password = crypto.createHash('md5').update(password).digest("hex");
             
             // Create the user
-            user = await User.create({
+            const user = await User.create({
                 firstName,
                 lastName,
                 mail: userMail,
@@ -192,7 +192,7 @@ usersMutations.refreshAccessToken = {
             }
 
             // Try to find a user matching this refreshToken
-            let user = await User.findOne({where: {refreshToken: refreshToken}})
+            const user = await User.findOne({where: {refreshToken: refreshToken}})
             if(!user){
                 throw new UserNotAllowedError()
             }
