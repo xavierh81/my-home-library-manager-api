@@ -8,6 +8,11 @@ const config: any = {
             access_token_expiration: 86400,
             use_secured_cookies: false,
             refreshToken_cookie_name: 'mhlm_refreshToken'
+        },
+        tmdb: {
+            api_key: process.env.MHLM_TMDB_API_KEY,
+            api_secret_key: process.env.MHLM_TMDB_API_SECRET_KEY,
+            language: 'fr-FR'
         }
     }
 }
