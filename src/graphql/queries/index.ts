@@ -1,9 +1,11 @@
 // Load all GraphQL queries
 import usersQueries from './usersQueries'
+import mediasQueries from './mediasQueries'
 
 // Format main queries object with merging all queries defined in files from graphql/queries folder
 const queries = {
-    ...usersQueries
+    ...usersQueries,
+    ...mediasQueries
 }
 
 // Export module

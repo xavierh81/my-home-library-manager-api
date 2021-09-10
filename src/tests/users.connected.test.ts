@@ -184,7 +184,6 @@ describe('Update user API', () => {
         });
 
         expect(result.errors).toBeUndefined();
-        expect(result.data).not.toBeUndefined();
         expect(result.data!.updateUser.id).toBe(1)
         expect(result.data!.updateUser.mail).toBe('test_user_4@mail.com')
     })

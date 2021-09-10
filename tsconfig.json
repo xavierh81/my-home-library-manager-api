@@ -20,6 +20,7 @@
       "@helpers/*": ["src/helpers/*"],
       "@defs_graphql/*": ["src/graphql/*"],
       "@middlewares/*": ["src/middlewares/*"],
+      "@core/*": ["src/core/*"]
     }
   },
   "exclude": [

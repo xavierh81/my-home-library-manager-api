@@ -1,6 +1,5 @@
 // Imports
 import { GraphQLList, GraphQLNonNull, GraphQLResolveInfo, GraphQLString } from "graphql";
-import { MediaSearchResult } from "@interfaces/medias"
 
 // GraphQL Types
 import {enumMediaType, searchMediaResultType} from '@defs_graphql/types/mediasTypes'
@@ -13,14 +12,18 @@ import { isObjectEmpty } from "@helpers/object"
 
 // Custom errors
 import { 
-    MissingRequiredParameterError, UserNotAllowedError
+    MissingRequiredParameterError, NotAvailableError, UserNotAllowedError
 } from '@defs_graphql/errors'
 
+// Others imports
+import MediasManager, {MediaSearchResult}  from "@core/mediasManager"
+import { media_types } from "@root/config/constants"
+
 // Define core object
-const mediasMutations : Record<string, GraphQLResolver> = {}
+const mediasQueries : Record<string, GraphQLResolver> = {}
 
 // Search a media with a text and a mediaType
-mediasMutations.searchMedia = {
+mediasQueries.searchMedia = {
     type: GraphQLList(searchMediaResultType),
     args: {
         text: {
@@ -44,7 +47,18 @@ mediasMutations.searchMedia = {
                 throw new MissingRequiredParameterError();
             }
 
-            const results : MediaSearchResult[] = [];
+            // Proceed with the search
+            const mediasManager: MediasManager = new MediasManager();
+            let results : MediaSearchResult[] = [];
+
+            switch (mediaType) {
+                case media_types.MOVIE:
+                    results = await mediasManager.searchMovies(text);
+                    break;
+
+                default: 
+                    throw new NotAvailableError()
+            }
 
             return results
             
@@ -55,4 +69,4 @@ mediasMutations.searchMedia = {
 }
 
 // Export module
-export default mediasMutations;
+export default mediasQueries;

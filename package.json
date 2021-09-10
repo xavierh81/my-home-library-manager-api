@@ -29,7 +29,8 @@
     "@helpers": "./src/helpers",
     "@defs_graphql": "./src/graphql",
     "@middlewares": "./src/middlewares",
-    "@types": "./src/ts/types"
+    "@types": "./src/ts/types",
+    "@core": "./src/core"
   },
   "jest": {
     "rootDir": ".",
@@ -44,13 +45,15 @@
       "@helpers(.*)$": "<rootDir>/src/helpers$1",
       "@defs_graphql(.*)$": "<rootDir>/src/graphql$1",
       "@middlewares(.*)$": "<rootDir>/src/middlewares$1",
-      "@types(.*)$": "<rootDir>/src/ts/types$1"
+      "@types(.*)$": "<rootDir>/src/ts/types$1",
+      "@core(.*)$": "<rootDir>/src/core$1"
     }
   },
   "dependencies": {
     "@babel/preset-typescript": "^7.15.0",
     "@types/sequelize": "^4.28.10",
     "apollo-server-express": "^3.1.2",
+    "axios": "^0.21.4",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",

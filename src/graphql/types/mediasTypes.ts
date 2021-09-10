@@ -1,5 +1,5 @@
 // Imports
-import {GraphQLObjectType,GraphQLString,GraphQLEnumType} from 'graphql'
+import {GraphQLObjectType,GraphQLString,GraphQLEnumType, GraphQLInt} from 'graphql'
 
 // Constants
 import {media_types} from '@config/constants' 
@@ -13,9 +13,12 @@ export const searchMediaResultType = new GraphQLObjectType({
   name: 'SearchMediaResultType',
   description :'Search result for a media search',
   fields: {
-    title: {
-      type: GraphQLString
-    }
+    id: { type: GraphQLInt },
+    title: { type: GraphQLString },
+    originalTitle: { type: GraphQLString },
+    summary: { type: GraphQLString },
+    imageUrl: { type: GraphQLString },
+    releaseDate: { type: GraphQLString }
   }
 })
 

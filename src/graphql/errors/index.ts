@@ -5,6 +5,7 @@ import InvalidMailFormatError from './InvalidMailFormatError'
 import InvalidCharacterError from './InvalidCharacterError'
 import UserMailAlreadyUsedError from './UserMailAlreadyUsedError'
 import UserNotAllowedError from './UserNotAllowedError'
+import NotAvailableError from './NotAvailableError'
 
 // Export modules
 
@@ -14,5 +15,6 @@ export {
     InvalidMailFormatError,
     InvalidCharacterError,
     UserMailAlreadyUsedError,
-    UserNotAllowedError
+    UserNotAllowedError,
+    NotAvailableError
 }
