@@ -10,6 +10,8 @@ interface UserAttributes {
     firstName: string;
     lastName: string;
     refreshToken: string;
+
+    accessToken?: string;
 }
   
 // Define optional attributes for User
@@ -23,6 +25,8 @@ class User extends Model<UserAttributes, UserCreationAttributes> implements User
     public firstName!: string;
     public lastName!: string;
     public refreshToken!: string;
+
+    public accessToken!: string;
 
     // timestamps!
     public readonly createdAt!: Date;
@@ -58,6 +62,9 @@ User.init(
             validate: {
                 notEmpty: true
             }
+        },
+        accessToken: {
+            type: new DataTypes.VIRTUAL(DataTypes.STRING, [])
         },
         firstName: {
             type: new DataTypes.STRING,

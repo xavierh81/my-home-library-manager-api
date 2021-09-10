@@ -1,18 +1,33 @@
 // Imports
-import {GraphQLObjectType,GraphQLString} from 'graphql'
-
-const models = require('@models')
-const { attributeFields, resolver, typeMapper } = require('graphql-sequelize');
+import {GraphQLInt, GraphQLObjectType,GraphQLString} from 'graphql'
 
 // Define all types
-let userType = new GraphQLObjectType({
+const userType = new GraphQLObjectType({
     name: 'User',
     description :'User',
-    fields: Object.assign(attributeFields(models.User), {
+    fields: {
+        id: {
+            type: GraphQLInt
+        },
+        mail: {
+            type: GraphQLString
+        },
+        password: {
+            type: GraphQLString
+        },
+        refreshToken: {
+            type: GraphQLString
+        },
+        firstName: {
+            type: GraphQLString
+        },
+        lastName: {
+            type: GraphQLString
+        },
         accessToken: {
             type: GraphQLString
         }
-    })
+    }
 })
 
 // Exports

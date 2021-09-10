@@ -45,7 +45,7 @@ describe('Login API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE)
     })
 
     test('Check not-well formatted mail', async () => {
@@ -58,7 +58,7 @@ describe('Login API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE)
     })
 
     test('Check wrong credentials', async () => {
@@ -71,21 +71,21 @@ describe('Login API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(USER_INVALID_CREDENTIALS_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(USER_INVALID_CREDENTIALS_ERROR_CODE)
     })
 
     test('Login success', async () => {
         const result = await mhlmServer.server.executeOperation({
             query: loginMutation,
             variables: {
-                mail: 'test_user@mail.com',
-                password: 'abcd1234'
+                mail: 'test_user_2@mail.com',
+                password: 'abcd5678'
             }
         });
         
         expect(result.errors).toBeUndefined();
         expect(result.data).not.toBeUndefined();
-        expect(result.data.login.id).toBe(1)
+        expect(result.data!.login.id).toBe(2)
     })
 })
 
@@ -124,7 +124,7 @@ describe('Register API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE)
     })
 
     test('Check not allowed characters', async () => {
@@ -139,7 +139,7 @@ describe('Register API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_NOT_ALLOWED_CHARACTER_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_NOT_ALLOWED_CHARACTER_ERROR_CODE)
     })
 
     test('Check not-well formatted mail', async () => {
@@ -154,7 +154,7 @@ describe('Register API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE)
     })
 
     test('Check mail already used', async () => {
@@ -163,13 +163,13 @@ describe('Register API', () => {
             variables: {
                 firstName: 'User',
                 lastName: 'Lastname',
-                mail: 'test_user@mail.com',
+                mail: 'test_user_2@mail.com',
                 password: 'test'
             }
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(USER_MAIL_ALREADY_USED_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(USER_MAIL_ALREADY_USED_ERROR_CODE)
     })
 
     test('Register success', async () => {
@@ -185,8 +185,8 @@ describe('Register API', () => {
         
         expect(result.errors).toBeUndefined();
         expect(result.data).not.toBeUndefined();
-        expect(result.data.register.id).toBe(3)
-        expect(result.data.register.mail).toBe('test_user_3@mail.com')
+        expect(result.data!.register.id).toBe(3)
+        expect(result.data!.register.mail).toBe('test_user_3@mail.com')
     })
 })
 

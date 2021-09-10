@@ -1,11 +1,8 @@
 // Imports
 import {GraphQLObjectType,GraphQLString,GraphQLEnumType} from 'graphql'
 
-const models = require('@models')
-const { attributeFields, resolver, typeMapper } = require('graphql-sequelize');
-
 // Constants
-const {media_types} = require('@config/constants')
+import {media_types} from '@config/constants' 
 
 //
 // Define all types

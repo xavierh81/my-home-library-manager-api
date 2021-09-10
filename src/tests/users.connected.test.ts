@@ -51,7 +51,7 @@ describe('Retrieve user API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(USER_NOT_ALLOWED_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(USER_NOT_ALLOWED_ERROR_CODE)
     })
 
     test('User retrieved', async () => {
@@ -63,8 +63,8 @@ describe('Retrieve user API', () => {
 
         expect(result.errors).toBeUndefined();
         expect(result.data).not.toBeUndefined();
-        expect(result.data.user.id).toBe(1)
-        expect(result.data.user.mail).toBe('test_user@mail.com')
+        expect(result.data!.user.id).toBe(1)
+        expect(result.data!.user.mail).toBe('test_user@mail.com')
     })
 })
 
@@ -104,7 +104,7 @@ describe('Update user API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(USER_NOT_ALLOWED_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(USER_NOT_ALLOWED_ERROR_CODE)
     })
 
     test('Check empty parameter', async () => {
@@ -120,7 +120,7 @@ describe('Update user API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_MISSING_REQUIRED_PARAMETER_ERROR_CODE)
     })
 
     test('Check not allowed characters', async () => {
@@ -136,7 +136,7 @@ describe('Update user API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_NOT_ALLOWED_CHARACTER_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_NOT_ALLOWED_CHARACTER_ERROR_CODE)
     })
 
     test('Check not-well formatted mail', async () => {
@@ -152,7 +152,7 @@ describe('Update user API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(GLOBAL_WRONG_MAIL_FORMAT_ERROR_CODE)
     })
 
     test('Check mail already used', async () => {
@@ -168,7 +168,7 @@ describe('Update user API', () => {
         });
 
         expect(result.errors).not.toBeUndefined();
-        expect(result.errors[0].extensions.code).toEqual(USER_MAIL_ALREADY_USED_ERROR_CODE)
+        expect(result.errors![0].extensions!.code).toEqual(USER_MAIL_ALREADY_USED_ERROR_CODE)
     })
 
     test('User updated', async () => {
@@ -185,8 +185,8 @@ describe('Update user API', () => {
 
         expect(result.errors).toBeUndefined();
         expect(result.data).not.toBeUndefined();
-        expect(result.data.updateUser.id).toBe(1)
-        expect(result.data.updateUser.mail).toBe('test_user_4@mail.com')
+        expect(result.data!.updateUser.id).toBe(1)
+        expect(result.data!.updateUser.mail).toBe('test_user_4@mail.com')
     })
 })
 

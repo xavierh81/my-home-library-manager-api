@@ -27,8 +27,8 @@ const config = loadConfig();
 // Load middlewares
 import userMiddleware from '@middlewares/UserMiddleware'
 
-// Declare variables / constants
-let apolloServer : ApolloServer<any> | null = null;
+// Load types
+import { QueryContext } from '@interfaces/queryContext';
 
 // Function that created the apolloServer
 function createApolloServer() {
@@ -47,21 +47,26 @@ function createApolloServer() {
   const server = new ApolloServer({
     schema,
     context: ({ req, res }: any) => {
-      return {
+      const userContext : QueryContext = {
         user: req !== undefined ? req.user : null,
-        refreshToken: req !== undefined && req.signedCookies != null ? req.signedCookies.mhlm_refreshToken : null, 
+        refreshToken: req !== undefined && req.signedCookies != null ? req.signedCookies.mhlm_refreshToken : null,
         res
       }
+      
+      return userContext
     }
   });
 
   return server
 }
 
+
+// Declare variables / constants
+const apolloServer : ApolloServer<any> = createApolloServer()
+
 // Function that configure and start the apollo server
 async function startApolloServer() {
-  const server = createApolloServer();
-  await server.start();
+  await apolloServer.start();
 
   // Initialize the app
   const app = express();
@@ -140,24 +145,19 @@ async function startApolloServer() {
   }));
 
   // Apply middleware
-  server.applyMiddleware({ app, cors: corsOptions });
+  apolloServer.applyMiddleware({ app, cors: corsOptions });
 
   await new Promise(resolve => app.listen({ port: 4002 }, () => resolve(true)));
 
-  console.log(`🚀 Server ready at http://localhost:4002${server.graphqlPath}`);
-  return { server, app };
+  console.log(`🚀 Server ready at http://localhost:4002${apolloServer.graphqlPath}`);
+  return app;
 }
 
-// if we are in test mode, we just export the server
-if(process.env.NODE_ENV == "test")
-{
-  apolloServer = createApolloServer();
-}
-// Else we run start the apollo server and listen for requests
-else 
+// if we are in NOT in test mode, we start the apollo server + sequelize ORM
+if(process.env.NODE_ENV != "test")
 {
   // Sync the Sequelize Model and then start apollo
-  db.sequelize.sync({force: false}).then(function () {
+  db.sequelize.sync({force: false}).then(() => {
     // Start the apollo server
     startApolloServer();
   })

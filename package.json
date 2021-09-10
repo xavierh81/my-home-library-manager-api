@@ -9,7 +9,7 @@
     "pretest": "cross-env NODE_ENV=test npm run db:reset",
     "db:reset": "npx sequelize-cli db:drop && npx sequelize-cli db:create && npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all --seeders-path ./src/seeders/test",
     "db:create:test": "cross-env NODE_ENV=test npx sequelize-cli db:create",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint 'src/**'"
   },
   "repository": {
     "type": "git",
@@ -58,7 +58,6 @@
     "express-jwt": "^6.1.0",
     "graphql": "^15.5.1",
     "graphql-relay": "^0.8.0",
-    "graphql-sequelize": "^9.4.3",
     "graphql-tools": "^8.1.0",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",

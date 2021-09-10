@@ -1,6 +1,5 @@
 // Imports
-import {GraphQLNonNull, GraphQLString} from 'graphql'
-const {resolver} = require('graphql-sequelize');
+import {GraphQLNonNull, GraphQLResolveInfo, GraphQLString} from 'graphql'
 import crypto from 'crypto'
 import { v4 as uuidv4 } from 'uuid';
 
@@ -9,14 +8,16 @@ import { User } from '@models'
 
 // GraphQL Types
 import {userType} from '@defs_graphql/types/usersTypes'
+import { QueryContext } from '@interfaces/queryContext';
+import { GraphQLResolver } from '@interfaces/GraphQLResolver';
 
 // Helpers 
 import {isStringEmpty, isValidEmail, isValidString} from '@helpers/string'
 import {generateAccessToken} from '@helpers/auth'
+import {loadConfig} from '@helpers/global'
 
 // Configuration
-var env       = process.env.SERVER_ENV || "local";
-var config    = require('@config/config')[env];
+const config = loadConfig();
 
 // Custom errors
 import { 
@@ -29,7 +30,7 @@ import {
 } from '@defs_graphql/errors'
 
 // Define core object
-const usersMutations : any = {}
+const usersMutations : Record<string, GraphQLResolver> = {}
 
 // Login with user credentials
 usersMutations.login = {
@@ -44,7 +45,7 @@ usersMutations.login = {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: async function (root: any, {mail, password}: any, context: any, info: any) {
+    resolve: async function (root: unknown, {mail, password}: Record<string, string | null>, context: QueryContext, _info: GraphQLResolveInfo) {
         try {
             // Check if required parameters are all set
             if(isStringEmpty(mail) || isStringEmpty(password)){
@@ -57,30 +58,24 @@ usersMutations.login = {
             }
 
             // Try to retrieve the user with these credentials
-            let hashed_password = crypto.createHash('md5').update(password).digest("hex");
-            const user = await User.findOne({where: {mail:mail.toLowerCase(),password: hashed_password}})
+            const hashed_password = crypto.createHash('md5').update(`${password}`).digest("hex");
+            const userMail = mail?.toLowerCase()
+            const user = await User.findOne({where: {mail:userMail, password: hashed_password}})
 
             if(user == null) {
                 throw new InvalidCredentialsError()
             }   
 
-            // Return the user after generate a new access token
-            return await resolver(User, {
-                before: (findOptions: any, args: any, context: any) => {
-                  findOptions.where = {id: user.id}
-                  return findOptions
-                },
-                after: (result: any, args: any, context: any) => {
-                  result.accessToken = generateAccessToken(result);
+            // Generate a new accessToken
+            user.accessToken = generateAccessToken(user);
 
-                  if(context.res !== undefined) 
-                  {
-                    context.res.cookie(config.refreshToken_cookie_name, user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
-                  }
+            if(context.res !== undefined) 
+            {
+                context.res.cookie(config.refreshToken_cookie_name, user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
+            }
 
-                  return result;
-                }
-            })(root, {}, context, info);
+            // Return user
+            return user;
             
         } catch (err) {
             return Promise.reject(err);
@@ -109,14 +104,14 @@ usersMutations.register = {
             type: new GraphQLNonNull(GraphQLString)
         }
     },
-    resolve: async function (root: any, {firstName, lastName, mail, password}: any, context: any, info: any) {
+    resolve: async function (root: unknown, {firstName, lastName, mail, password}: Record<string, string>, context: QueryContext, _info: GraphQLResolveInfo) {
         try {
             // Check if required parameters are all set
             if(isStringEmpty(firstName) || isStringEmpty(lastName) || isStringEmpty(mail) || isStringEmpty(password)){
                 throw new MissingRequiredParameterError();
             }
 
-            // Validate firstName / Lastname
+            // Validate firstName / lastName
             if(!isValidString(firstName) || !isValidString(lastName)) {
                 throw new InvalidCharacterError()
             }
@@ -128,14 +123,14 @@ usersMutations.register = {
             }
 
             // Check if user already exists
-            let existingUser = await User.findOne({where: {mail: userMail}})
+            const existingUser = await User.findOne({where: {mail: userMail}})
             if(existingUser != null)
             {
                 throw new UserMailAlreadyUsedError()
             }
 
             // Hash the password
-            let hashed_password = crypto.createHash('md5').update(password).digest("hex");
+            const hashed_password = crypto.createHash('md5').update(password).digest("hex");
             
             // Create the user
             const user = await User.create({
@@ -145,25 +140,17 @@ usersMutations.register = {
                 password: hashed_password,
                 refreshToken: uuidv4()
             })
-            
-            // Return the user after generate a new access token
-            return await resolver(User, {
-                before: (findOptions: any, args: any, context: any) => {
-                    findOptions.where = {id: user.id}
-                    return findOptions
-                },
-                after: (result: any, args: any, context: any) => {
-                    result.id = user.id
-                    result.accessToken = generateAccessToken(result);
 
-                    if(context.res !== undefined) 
-                    {
-                      context.res.cookie(config.refreshToken_cookie_name, user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
-                    }
+            // Generate a new accessToken
+            user.accessToken = generateAccessToken(user);
 
-                    return result;
-                }
-            })(root, {}, context, info);
+            if(context.res !== undefined) 
+            {
+                context.res.cookie(config.refreshToken_cookie_name, user.refreshToken, {httpOnly: true, secure: config.use_secured_cookies, signed: true})
+            }
+
+            // Return user
+            return user;
             
         } catch (err) {
             return Promise.reject(err);
@@ -180,7 +167,7 @@ usersMutations.refreshAccessToken = {
             type: GraphQLString
         }
     },
-    resolve: async function (root: any, {refreshToken}: any, context: any, info: any) {
+    resolve: async function (_root: unknown, {refreshToken}: Record<string, string | null>, context: QueryContext, _info: GraphQLResolveInfo) {
         try {
             // Validate input
             if(refreshToken == null) {
@@ -197,18 +184,11 @@ usersMutations.refreshAccessToken = {
                 throw new UserNotAllowedError()
             }
 
-            // Return the user after generate a new access token
-            return await resolver(User, {
-                before: (findOptions: any, args: any, context: any) => {
-                    findOptions.where = {id: user.id}
-                    return findOptions
-                },
-                after: (result: any, args: any, context: any) => {
-                    result.accessToken = generateAccessToken(result);
+            // Generate a new accessToken
+            user.accessToken = generateAccessToken(user);
 
-                    return result;
-                }
-            })(root, {}, context, info);
+            // Return user
+            return user;
 
         } catch (err) {
             return Promise.reject(err);
@@ -233,7 +213,7 @@ usersMutations.updateUser = {
             type: new GraphQLNonNull(GraphQLString)
         },
     },
-    resolve: async function (root: any, {firstName, lastName, mail}: any, context: any, info: any) {
+    resolve: async function (root: unknown, {firstName, lastName, mail}: Record<string, string>, context: QueryContext, _info: GraphQLResolveInfo) {
         // Check if the user is authenticated
         if(context.user == null) {
             throw new UserNotAllowedError()
@@ -244,7 +224,7 @@ usersMutations.updateUser = {
             throw new MissingRequiredParameterError();
         }
 
-        // Validate firstName / Lastname
+        // Validate firstName / lastName
         if(!isValidString(firstName) || !isValidString(lastName)) {
             throw new InvalidCharacterError()
         }
@@ -268,21 +248,17 @@ usersMutations.updateUser = {
         }
 
         // If we arrive here, we can update the user
+        const user = await User.findOne({where: {id: context.user.id }})
         const newAttributes = {
             mail: userMail,
             firstName,
             lastName
         }
 
-        await User.update(newAttributes, {where: {id: context.user.id}})
+        await user?.update(newAttributes)
         
         // Return updated user
-        return await resolver(User,{
-            before: (findOptions: any, args: any, context: any) => {
-              findOptions.where = {id: context.user.id}
-              return findOptions
-            }
-        })(root, {}, context, info);
+        return user
     }
 }
 
