@@ -23,7 +23,7 @@ import { media_types } from "@root/config/constants"
 const mediasQueries : Record<string, GraphQLResolver> = {}
 
 // Search a media with a text and a mediaType
-mediasQueries.searchMedia = {
+mediasQueries.searchMedias = {
     type: GraphQLList(searchMediaResultType),
     args: {
         text: {
