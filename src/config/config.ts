@@ -12,7 +12,7 @@ const config: any = {
         tmdb: {
             api_key: process.env.MHLM_TMDB_API_KEY,
             api_secret_key: process.env.MHLM_TMDB_API_SECRET_KEY,
-            language: 'fr-FR'
+            language: 'en-US'
         }
     }
 }
