@@ -79,7 +79,7 @@ describe('Retrieve Movie API', () => {
         const result = await mhlmServer.server.executeOperation({
             query: retrieveMovieQuery,
             variables: {
-                text: 'Le Roi Lion',
+                text: 'The Lion King',
                 mediaType: 'MOVIE'
             }
         });
@@ -94,7 +94,7 @@ describe('Retrieve Movie API', () => {
         const result = await mhlmServer.server.executeOperation({
             query: retrieveMovieQuery,
             variables: {
-                text: 'Le Roi Lion',
+                text: 'The Lion King',
                 mediaType: 'MOVIE'
             }
         });
@@ -102,7 +102,7 @@ describe('Retrieve Movie API', () => {
         expect(result.errors).toBeUndefined();
         expect(result.data!.searchMedias[0].id).toBe(8587)
         expect(result.data!.searchMedias[0].releaseDate).toBe("1994-06-23")
-        expect(result.data!.searchMedias[0].title).toBe("Le Roi lion")
+        expect(result.data!.searchMedias[0].title).toBe("The Lion King")
     })
 })
 
