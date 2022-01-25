@@ -35,9 +35,9 @@ const removeUserContext = async () => {
 // All tests regarding Movie search
 describe('Retrieve Movie API', () => {
     const retrieveMovieQuery = gql`
-        query searchMedia($text: String!, $mediaType: MediaType!) 
+        query searchMedias($text: String!, $mediaType: MediaType!) 
         { 
-            searchMedia(text: $text, mediaType: $mediaType) 
+            searchMedias(text: $text, mediaType: $mediaType) 
             {
                 id,
                 title,
@@ -100,9 +100,9 @@ describe('Retrieve Movie API', () => {
         });
 
         expect(result.errors).toBeUndefined();
-        expect(result.data!.searchMedia[0].id).toBe(8587)
-        expect(result.data!.searchMedia[0].releaseDate).toBe("1994-06-23")
-        expect(result.data!.searchMedia[0].title).toBe("Le Roi lion")
+        expect(result.data!.searchMedias[0].id).toBe(8587)
+        expect(result.data!.searchMedias[0].releaseDate).toBe("1994-06-23")
+        expect(result.data!.searchMedias[0].title).toBe("Le Roi lion")
     })
 })
 
