@@ -1,5 +1,6 @@
 // Imports
-import {GraphQLInt, GraphQLObjectType,GraphQLString} from 'graphql'
+import {GraphQLInt, GraphQLList, GraphQLObjectType,GraphQLString} from 'graphql'
+import {mediaType} from './mediasTypes'
 
 // Define all types
 const userType = new GraphQLObjectType({
@@ -26,6 +27,9 @@ const userType = new GraphQLObjectType({
         },
         accessToken: {
             type: GraphQLString
+        },
+        medias: {
+            type: GraphQLList(mediaType)
         }
     }
 })

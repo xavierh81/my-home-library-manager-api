@@ -30,3 +30,8 @@ export const formatBytes = (bytes: number, decimals = 2) : string => {
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + '' + sizes[i];
 }
+
+// Get enum key by his value
+export const getEnumKeyByValue = (object: any, value: number) => {
+    return Object.keys(object).find(key => object[key] === value);
+}

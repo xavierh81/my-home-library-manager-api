@@ -39,12 +39,14 @@ describe('Retrieve Movie API', () => {
         { 
             searchMedias(text: $text, mediaType: $mediaType) 
             {
-                id,
                 title,
                 originalTitle,
                 releaseDate,
                 imageUrl,
-                summary
+                summary,
+
+                searchSource,
+                searchSourceMediaId
             }
         }
     `
@@ -100,7 +102,7 @@ describe('Retrieve Movie API', () => {
         });
 
         expect(result.errors).toBeUndefined();
-        expect(result.data!.searchMedias[0].id).toBe(8587)
+        expect(result.data!.searchMedias[0].searchSourceMediaId).toBe("8587")
         expect(result.data!.searchMedias[0].releaseDate).toBe("1994-06-23")
         expect(result.data!.searchMedias[0].title).toBe("The Lion King")
     })

@@ -6,6 +6,8 @@ import InvalidCharacterError from './InvalidCharacterError'
 import UserMailAlreadyUsedError from './UserMailAlreadyUsedError'
 import UserNotAllowedError from './UserNotAllowedError'
 import NotAvailableError from './NotAvailableError'
+import MediaAlreadyExistsError from './MediaAlreadyExistsError'
+import MediaInvalidRatingError from './MediaInvalidRatingError'
 
 // Export modules
 
@@ -16,5 +18,7 @@ export {
     InvalidCharacterError,
     UserMailAlreadyUsedError,
     UserNotAllowedError,
-    NotAvailableError
+    NotAvailableError,
+    MediaAlreadyExistsError,
+    MediaInvalidRatingError
 }

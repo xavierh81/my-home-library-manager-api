@@ -5,6 +5,9 @@ import axios from 'axios'
 import {loadConfig} from '@helpers/global'
 import { isStringEmpty } from '@helpers/string';
 
+// Constants
+import {media_search_sources} from '@config/constants' 
+
 // Configuration
 const config = loadConfig();
 
@@ -34,12 +37,15 @@ class MediasManager {
                     // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     response.data.results.forEach((movie: any) => {
                         results.push({
-                            id: movie.id,
                             title: movie.title,
                             originalTitle: movie.original_title,
                             imageUrl: isStringEmpty(movie.poster_path) == false ? `${MediasManager.TMDB_IMAGE_URL_PATH}${movie.poster_path}` : null,
                             releaseDate: movie.release_date,
-                            summary: movie.overview
+                            summary: movie.overview,
+                            rating: movie.vote_average != null && movie.vote_average > 0 ? Math.round(movie.vote_average / 2.0 * 10.0) / 10.0 : null,
+
+                            searchSource: media_search_sources.TMDB,
+                            searchSourceMediaId: movie.id
                         })
                     })
                 }
@@ -56,13 +62,16 @@ class MediasManager {
 
 // Export result type
 export type MediaSearchResult = {
-    id: number;
+    searchSource: number;
+    searchSourceMediaId: string;
+
     title: string;
     originalTitle: string;
     imageUrl?: string | null;
     releaseDate: string;
     duration?: number | null;
     summary?: string | null;
+    rating?: number | null;
 }
 
 // Main export of medias manager

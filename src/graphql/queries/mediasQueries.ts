@@ -17,7 +17,7 @@ import {
 
 // Others imports
 import MediasManager, {MediaSearchResult}  from "@core/mediasManager"
-import { media_types } from "@root/config/constants"
+import {media_types} from "@root/config/constants"
 
 // Define core object
 const mediasQueries : Record<string, GraphQLResolver> = {}

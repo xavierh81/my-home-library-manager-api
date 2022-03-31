@@ -2,6 +2,8 @@
 import { DataTypes, Model, Optional } from 'sequelize'
 import db from './_instance'
 
+import Media from './Media'
+
 // Declare the attributes in the User model
 interface UserAttributes {
     id: number;
@@ -87,5 +89,7 @@ User.init(
       sequelize: db.sequelize,
     }
 );
+
+User.hasMany(Media, { sourceKey: 'id', foreignKey: 'userId', as: 'medias' });
 
 export default User

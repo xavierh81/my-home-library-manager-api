@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken"
 import { Request } from "express"
 
 // Models
-import { User } from '@models'
+import { User, Media } from '@models'
 
 // Load configuration
 import {loadConfig} from '@helpers/global'
@@ -40,7 +40,7 @@ export const getAuthTokenFromHeader = (req: Request) : string | null => {
 // Retrieve user from token
 export const getUserFromToken = (tokenData: any) : Promise<User | null> => {
     return new Promise((resolve) => {
-        User.findOne({where: {id: tokenData.sub}}).then((user : User | null) => {
+        User.findOne({where: {id: tokenData.sub}, include: [{model: Media, as: 'medias'}]}).then((user : User | null) => {
             if (user) {
                 resolve(user)
             } else {
